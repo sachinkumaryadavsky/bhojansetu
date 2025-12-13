@@ -31,9 +31,9 @@ export const FoodRepository = {
 
   async createReserveFood( foodId :number , ngoId :number){
       const query = `INSERT into reservations(food_id,ngo_id) values(?,?)`;
-     const [result] =  await db().query(query,[foodId,ngoId]);
-     return result;
-
+      const [result] =  await db().query(query,[foodId,ngoId]);
+      const { insertId } = result as { insertId: number };
+      return insertId;
   },
   async getFoodById(food_id:number){
     const query  = `SELECT * FROM food WHERE id = ?`;
@@ -50,8 +50,8 @@ export const FoodRepository = {
   async reserveFood(food_id: number){
     const query = `UPDATE food SET STATUS = 'claimed' where id = ?`;
     const  [result] = await db().execute(query,[food_id]);
-      const { insertId } = result as { insertId: number };
-      return insertId;
+      const { affectedRows } = result as { affectedRows: number };
+      return affectedRows;
   }
   
 

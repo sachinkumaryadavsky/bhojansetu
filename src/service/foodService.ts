@@ -28,9 +28,8 @@ export const FoodService = {
     if(!reserveFood) throw new Error ("Error while claiming food");
     const result =  await FoodRepository.createReserveFood(foodId,ngoId);
     if(!result) throw new Error("errow while creating reservation");
-    return {
-       reservationId : result
-    }
+    console.log(result);
+    return { reservatioId : result};
   }
 
 };
