@@ -14,8 +14,12 @@ export const authController = {
   async login(req: FastifyRequest, reply: FastifyReply) {
     try {
       const { email, password } = req.body as any;
-      const token = await authService.login(email, password);
-      reply.send(token);
+      const user = await authService.login(email, password);
+        const token = await reply.jwtSign({
+         id: user.id,
+         role: user.role,
+       });
+      reply.send({messag:"login successful", token:token});
     } catch (e: any) {
       reply.status(401).send({ message: e.message });
     }

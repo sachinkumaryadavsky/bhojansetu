@@ -1,12 +1,20 @@
 import { FastifyInstance } from "fastify";
 import { FoodController } from "../controller/foodController";
 import { authController } from "../controller/authController";
+import { authenticate } from "../plugins/auth"
+import { allowRoles } from "../plugins/roleGuard";
+export default async function Routes(app: FastifyInstance) {
 
-
-export default async function FoodRoutes(app: FastifyInstance) {
-   app.post("/register", authController.register);
+   //  Public routes (no JWT)
+  app.post("/register", authController.register);
   app.post("/login", authController.login);
-  app.post("/food", FoodController.create);
-  app.get("/food", FoodController.getAll);
-  app.post("/reservation",FoodController.reserveFood);
+
+  // Protected routes (JWT required)
+  app.register(async function (protectedRoutes) {
+    protectedRoutes.addHook("preHandler", authenticate);
+
+    protectedRoutes.post("/food",{ preHandler: [allowRoles(["restaurant"])] }, FoodController.create);
+    protectedRoutes.get("/food", FoodController.getAll);
+    protectedRoutes.post("/reservation",{ preHandler: [allowRoles(["ngo"])] }, FoodController.reserveFood);
+  });
 }

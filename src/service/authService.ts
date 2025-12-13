@@ -1,5 +1,5 @@
 import { userRepository } from "../persistance/userRepository";
-import { signToken } from "../utils/jwt";
+
 import bcrypt from "bcrypt";
 
 export const authService = {
@@ -23,12 +23,9 @@ export const authService = {
 
     const match = await bcrypt.compare(password, user.password);
     if (!match) throw new Error("Invalid credentials");
-
-    const token = signToken({
+    return ({
       id: user.id,
       role: user.role
     });
-
-    return { token };
   }
 };
