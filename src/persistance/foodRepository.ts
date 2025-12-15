@@ -53,9 +53,9 @@ export const FoodRepository = {
       const { affectedRows } = result as { affectedRows: number };
       return affectedRows;
   },
-  async approveReservation(reservatioId:number){
-    const query = `UPDATE reservations SET status ="approved" where id = ?`;
-    const  result = await db().execute(query,[reservatioId]);
+  async approveDenyReservation(reservatioId:number,flag:string){
+     const query = `UPDATE reservations SET status = ? where id = ?`;
+    const  result = await db().execute(query,[flag,reservatioId]);
     return result;
   },
   async getReservationById(reservatioId:number){
@@ -64,7 +64,8 @@ export const FoodRepository = {
     const [rows] = await db().execute<RowDataPacket[]>(query,[reservatioId]);
     const result = rows[0] ?? null;
     return result;
-  }
+  },
+ 
 
   
 
