@@ -4,6 +4,11 @@ export interface AuthUser {
   id: number;
   role: "restaurant" | "ngo";
 }
+declare module "fastify" {
+  interface FastifyRequest {
+    user: AuthUser;
+  }
+}
 
 export async function authenticate(
   request: FastifyRequest,
@@ -11,7 +16,7 @@ export async function authenticate(
 ) {
   try {
     const decoded = await request.jwtVerify<AuthUser>();
-    (request as any).user = decoded;
+    request.user = decoded;
   } catch {
     reply.code(401).send({ message: "Unauthorized" });
   }
