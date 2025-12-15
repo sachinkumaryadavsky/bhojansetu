@@ -52,7 +52,20 @@ export const FoodRepository = {
     const  [result] = await db().execute(query,[food_id]);
       const { affectedRows } = result as { affectedRows: number };
       return affectedRows;
+  },
+  async approveReservation(reservatioId:number){
+    const query = `UPDATE reservations SET status ="approved" where id = ?`;
+    const  result = await db().execute(query,[reservatioId]);
+    return result;
+  },
+  async getReservationById(reservatioId:number){
+
+    const query =   `SELECT * FROM reservations WHERE id = ?`;
+    const [rows] = await db().execute<RowDataPacket[]>(query,[reservatioId]);
+    const result = rows[0] ?? null;
+    return result;
   }
+
   
 
 };

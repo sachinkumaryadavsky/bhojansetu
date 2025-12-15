@@ -30,6 +30,18 @@ export const FoodService = {
     if(!result) throw new Error("errow while creating reservation");
     console.log(result);
     return { reservatioId : result};
-  }
+  },
+  async approveReservation(reservationId:number,restaurantID : number){
+    
+    const reservationData = await FoodRepository.getReservationById(reservationId);
+    if(!reservationData || reservationData.status == "approved") throw new Error("Reservation not found or already approved");
+    const foodData  = await FoodRepository.getFoodById(reservationData.food_id);
+    if(!foodData) throw new Error ("Food not found");
+    if(foodData.restaurant_id != restaurantID ) throw new Error ("You are not allowed ")
+    const result = await FoodRepository.approveReservation(reservationId);
+     return {
+       status:true
+     }
+  } 
 
 };
