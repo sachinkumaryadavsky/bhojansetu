@@ -37,17 +37,23 @@ export const FoodController = {
     }
 
   },
-  async approveReservation(req:FastifyRequest, reply: FastifyReply){
+  async approveDenyReservation(req:FastifyRequest, reply: FastifyReply){
     try{
     const { id } = req.params as { id:string };
     const userID = req.user.id;
+   
     const reservationId = Number(id);
      if (Number.isNaN(reservationId)) {
         return reply.code(400).send({ message: "Invalid reservation id",status:false });
      }
-    const result = await FoodService.approveReservation(reservationId,userID);
+     type ReservationAction = "approved" | "denied";
+    const { status } = req.body as { status: ReservationAction };
+    if (!["approved", "denied"].includes(status)) {
+      return reply.code(400).send({ message: "Invalid status" });
+    }
+    const result = await FoodService.approveDenyReservation(reservationId,userID,status);
     reply.status(200).send({
-      message:"Reservation approved successfully",
+      message:`Reservation ${status} successfully`,
       status: result.status
 
     })

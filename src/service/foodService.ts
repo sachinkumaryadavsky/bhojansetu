@@ -31,14 +31,15 @@ export const FoodService = {
     console.log(result);
     return { reservatioId : result};
   },
-  async approveReservation(reservationId:number,restaurantID : number){
+  async approveDenyReservation(reservationId:number,restaurantID : number,flag:string){
     
     const reservationData = await FoodRepository.getReservationById(reservationId);
-    if(!reservationData || reservationData.status == "approved") throw new Error("Reservation not found or already approved");
+    const status = reservationData.status;
+    if(!reservationData ||  status == flag || status=="denied"  || status == "approved" ) throw new Error("Reservation not found or already approved or denied");
     const foodData  = await FoodRepository.getFoodById(reservationData.food_id);
     if(!foodData) throw new Error ("Food not found");
-    if(foodData.restaurant_id != restaurantID ) throw new Error ("You are not allowed ")
-    const result = await FoodRepository.approveReservation(reservationId);
+    if(foodData.restaurant_id != restaurantID ) throw new Error (`You can not  approve or reject`);    
+    const result = await FoodRepository.approveDenyReservation(reservationId,flag);
      return {
        status:true
      }
