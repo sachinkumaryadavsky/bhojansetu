@@ -35,8 +35,8 @@ export const FoodService = {
   async approveDenyReservation(reservationId:number,restaurantID : number,flag:string){
     
     const reservationData = await FoodRepository.getReservationById(reservationId);
-    const status = reservationData?.status || "";
-    if(!reservationData ||  status == flag || status=="denied"  || status == "approved" ) throw new Error("Reservation not found or already approved or denied");
+   
+    if(!reservationData ||   reservationData.status!="requested" ) throw new Error("Reservation not found or already approved or denied or picked up");
     const foodData  = await FoodRepository.getFoodById(reservationData.food_id);
     if(!foodData) throw new Error ("Food not found");
     if(foodData.restaurant_id != restaurantID ) throw new Error (`You can not  approve or reject`);    
