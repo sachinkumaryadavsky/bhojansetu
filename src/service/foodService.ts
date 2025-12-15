@@ -1,5 +1,6 @@
 import { error } from "node:console";
 import { FoodRepository } from "../persistance/foodRepository";
+import { errorCodes } from "fastify";
 
 export const FoodService = {
   async createFood(data: any) {
@@ -34,15 +35,28 @@ export const FoodService = {
   async approveDenyReservation(reservationId:number,restaurantID : number,flag:string){
     
     const reservationData = await FoodRepository.getReservationById(reservationId);
-    const status = reservationData.status;
+    const status = reservationData?.status || "";
     if(!reservationData ||  status == flag || status=="denied"  || status == "approved" ) throw new Error("Reservation not found or already approved or denied");
     const foodData  = await FoodRepository.getFoodById(reservationData.food_id);
     if(!foodData) throw new Error ("Food not found");
     if(foodData.restaurant_id != restaurantID ) throw new Error (`You can not  approve or reject`);    
     const result = await FoodRepository.approveDenyReservation(reservationId,flag);
+     if(!result) throw new Error(`Errow: food not ${flag}`);
      return {
        status:true
      }
-  } 
+  },
+  async pickReserveFood(reservationId:number,ngoId:number){
+    const reservationData = await FoodRepository.getReservationById(reservationId);
+    if(!reservationData || reservationData.status != "approved") throw new Error ("Food reservation not found or already picked");
+    if(reservationData.ngo_id != ngoId) throw new Error (`You are not allowed to pick food `); 
+    const foodData  = await FoodRepository.getFoodById(reservationData.food_id);
+    if(!foodData) throw new Error ("Food not found");
+    const result = await FoodRepository.pickReserveFood(reservationId);
+    if(!result) throw new Error("Errow while picking up food");
+     return {
+       status:true
+     }
+  }
 
 };

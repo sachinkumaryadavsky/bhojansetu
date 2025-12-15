@@ -54,7 +54,7 @@ export const FoodRepository = {
       return affectedRows;
   },
   async approveDenyReservation(reservatioId:number,flag:string){
-     const query = `UPDATE reservations SET status = ? where id = ?`;
+     const query = `UPDATE reservations SET status = ?,updated_at = CURRENT_TIMESTAMP where id = ?`;
     const  result = await db().execute(query,[flag,reservatioId]);
     return result;
   },
@@ -65,6 +65,11 @@ export const FoodRepository = {
     const result = rows[0] ?? null;
     return result;
   },
+  async pickReserveFood(reservatioId:number){
+    const query = `UPDATE reservations SET status = "picked_up", picked_up_at = CURRENT_TIMESTAMP where id = ?`;
+    const  result = await db().execute(query,[reservatioId]);
+    return result;
+  }
  
 
   

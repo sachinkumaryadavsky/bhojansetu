@@ -58,8 +58,27 @@ export const FoodController = {
 
     })
     }catch(error:any){
-      reply.status(500).send({message:error.message,status:false})
+      reply.status(500).send({message:error.message,status:false});
 
+    }
+  },
+  async pickReserveFood(req:FastifyRequest,reply:FastifyReply){
+    try{
+      const { id } = req.params as { id:string };
+      const userID = req.user.id;
+   
+    const reservationId = Number(id);
+     if (Number.isNaN(reservationId)) {
+        return reply.code(400).send({ message: "Invalid reservation id",status:false });
+     }
+     const result =  await FoodService.pickReserveFood(reservationId,userID);
+     reply.status(200).send({
+       message:"Food picked successfully",
+       status:  result.status
+     })
+
+    }catch(error:any){
+      reply.status(500).send({message:error.message,status:false});
     }
   }
   
