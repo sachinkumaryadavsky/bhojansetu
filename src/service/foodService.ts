@@ -57,6 +57,13 @@ export const FoodService = {
      return {
        status:true
      }
+  },
+  async reservationStatus(reservationId:number,userID:number){
+     const reservationData = await FoodRepository.getReservationById(reservationId);
+     if(!reservationData ) throw new Error("Reservation not found");
+     const result = await FoodRepository.getReservationById(reservationId);
+     if(!result) throw new Error("Error while checking reservation status");
+     return result.status;
   }
 
 };

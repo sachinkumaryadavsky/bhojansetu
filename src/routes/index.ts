@@ -18,5 +18,6 @@ export default async function Routes(app: FastifyInstance) {
     protectedRoutes.post("/reservation",{ preHandler: [allowRoles(["ngo"])] }, FoodController.reserveFood);
     protectedRoutes.patch("/reservation/:id/status",{preHandler:[allowRoles(["restaurant"])]},FoodController.approveDenyReservation);
     protectedRoutes.patch("/reservation/:id/pick",{preHandler:[allowRoles(["ngo"])]},FoodController.pickReserveFood);
+    protectedRoutes.get("/reservation/:id/status",{preHandler:[allowRoles(["ngo","restaurant"])]},FoodController.reservationStatus);
   });
 }
