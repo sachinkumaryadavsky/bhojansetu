@@ -133,6 +133,19 @@ export const FoodController = {
     }catch(error:any){
       reply.status(500).send({message:error.message,status:false,data:null});
     }
+  },
+  async getReservationListByNGOId(req:FastifyRequest,reply:FastifyReply){
+    try{
+      const userId = req.user.id;
+      const result = await FoodService.reservationListByNGOId(userId);
+      reply.status(200).send({
+        message:"Reservation list fetched successfully",
+        status:true,
+        data:result
+      })
+    }catch(error:any){
+        reply.status(500).send({message:error.message,status:false,data:null});
+    }
   }
 
   
