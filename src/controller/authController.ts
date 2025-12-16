@@ -19,7 +19,7 @@ export const authController = {
          id: user.id,
          role: user.role,
        });
-      reply.send({messag:"login successful", token:token});
+      reply.send({message:"login successful", token:token});
     } catch (e: any) {
       reply.status(401).send({ message: e.message });
     }
