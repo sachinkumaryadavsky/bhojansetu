@@ -99,6 +99,26 @@ export const FoodController = {
     }catch(error:any){
      reply.status(500).send({message:error.message,status:null});
     }
+  },
+  async getReservationList(req:FastifyRequest,reply:FastifyReply){
+    try{
+       const { foodId } = req.params as { foodId:string };
+       const userID = req.user.id;
+   
+    const id = Number(foodId);
+     if (Number.isNaN(foodId)) {
+        return reply.code(400).send({ message: "Invalid reservation id",status:false });
+     }
+     const result =  await FoodService.reservationList(id,userID);
+     reply.status(200).send({
+      message:"Reservation status fetched successfully",
+      status : true,
+      data:result
+     })
+    }catch(error:any){
+      reply.status(500).send({message:error.message,status:false,data:null});
+
+    }
   }
   
 };
