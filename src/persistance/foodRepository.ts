@@ -69,9 +69,15 @@ export const FoodRepository = {
     const query = `UPDATE reservations SET status = "picked_up", picked_up_at = CURRENT_TIMESTAMP where id = ?`;
     const  result = await db().execute(query,[reservatioId]);
     return result;
-  }
- 
+  },
+  async getReservationByFoodId(foodId:number){
+  const query = `SELECT * FROM reservations WHERE food_id = ? AND status ='requested'`;
+  const  [result] = await db().execute(query,[foodId]);
+  return result;
 
-  
+  }
+
+
+
 
 };

@@ -1,6 +1,7 @@
 import { error } from "node:console";
 import { FoodRepository } from "../persistance/foodRepository";
 import { errorCodes } from "fastify";
+import { reservationSchema } from "../schema/reservationSchema";
 
 export const FoodService = {
   async createFood(data: any) {
@@ -21,7 +22,7 @@ export const FoodService = {
     if(foodId < 0 || ngoId < 0) throw new  Error("Invalid food or ngoID ");
     const food= await FoodRepository.getFoodById(foodId);
     
-    if(!food ||  food.status != "active") throw new Error ("food is not found or not-active");
+    if(!food ) throw new Error ("food is not found or not-active");
     const user = await FoodRepository.getUserById(ngoId);
     if(!user || user.role != "ngo") throw new Error ("Not valid user")
     console.log("### Reservering food")
@@ -64,6 +65,14 @@ export const FoodService = {
      const result = await FoodRepository.getReservationById(reservationId);
      if(!result) throw new Error("Error while checking reservation status");
      return result.status;
+  },
+  async reservationList(foodId : number,restaurantID:number){
+    const foodData  = await FoodRepository.getFoodById(foodId);
+    if(!foodData) throw new Error ("Food not found");
+    if(foodData.restaurant_id != restaurantID) throw new Error (`You are not allowed to check the request list`); 
+    const result =  await FoodRepository.getReservationByFoodId(foodId);
+    return result;
+    
   }
 
 };
