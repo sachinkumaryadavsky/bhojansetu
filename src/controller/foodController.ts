@@ -5,7 +5,8 @@ import { reservationType } from "../schema/reservationSchema";
 export const FoodController = {
   async create(req: FastifyRequest, reply: FastifyReply) {
     try {
-      const result = await FoodService.createFood(req.body);
+      const userId = req.user.id;
+      const result = await FoodService.createFood(req.body,userId);
       
       reply.status(201).send({
         message: "Food posted successfully",
@@ -119,6 +120,20 @@ export const FoodController = {
       reply.status(500).send({message:error.message,status:false,data:null});
 
     }
+  },
+  async getFoodByResturanId(req:FastifyRequest,reply:FastifyReply){
+    try{
+      const userId = req.user.id;
+      const result = await FoodService.foodPostedByRestaurant(userId);
+      reply.status(200).send({
+        message:"Food list fetched successfully",
+        status:true,
+        data:result
+      })
+    }catch(error:any){
+      reply.status(500).send({message:error.message,status:false,data:null});
+    }
   }
+
   
 };

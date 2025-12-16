@@ -4,13 +4,13 @@ import { errorCodes } from "fastify";
 import { reservationSchema } from "../schema/reservationSchema";
 
 export const FoodService = {
-  async createFood(data: any) {
+  async createFood(data: any,restaurantID:number) {
     // business validation
-    if (!data.restaurant_id || !data.title || !data.quantity || !data.food_type || !data.expiry_time) {
+    if ( !data.title || !data.quantity || !data.food_type || !data.expiry_time) {
       throw new Error("Missing required fields");
     }
 
-    const id = await FoodRepository.create(data);
+    const id = await FoodRepository.create(data,restaurantID);
     return { id, ...data };
   },
 
@@ -73,6 +73,10 @@ export const FoodService = {
     const result =  await FoodRepository.getReservationByFoodId(foodId);
     return result;
     
+  },
+  async foodPostedByRestaurant(restaurantID :number){
+    const result = await FoodRepository.getFoodByRestaurantId(restaurantID);
+    return  result;
   }
 
 };

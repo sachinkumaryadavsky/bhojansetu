@@ -1,7 +1,7 @@
 import { db } from "../config/db";
 import { RowDataPacket } from "mysql2";
 export const FoodRepository = {
-  async create(data: any) {
+  async create(data: any,restaurantId:number) {
     const query = `
       INSERT INTO food 
       (restaurant_id, title, description, quantity, food_type, expiry_time)
@@ -9,7 +9,7 @@ export const FoodRepository = {
     `;
 
     const values = [
-      data.restaurant_id,
+      restaurantId,
       data.title,
       data.description || "",
       data.quantity,
@@ -75,7 +75,13 @@ export const FoodRepository = {
   const  [result] = await db().execute(query,[foodId]);
   return result;
 
+  },
+  async getFoodByRestaurantId(restaurantID:number){
+    const query = `SELECT * FROM food WHERE restaurant_id = ?  order by id DESC`;
+  const  [result] = await db().execute(query,[restaurantID]);
+  return result;
   }
+
 
 
 
