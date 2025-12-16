@@ -77,6 +77,10 @@ export const FoodService = {
   async foodPostedByRestaurant(restaurantID :number){
     const result = await FoodRepository.getFoodByRestaurantId(restaurantID);
     return  result;
+  },
+  async reservationListByNGOId(ngoId : number){
+    const result = await FoodRepository.getReservationByUserId(ngoId);
+    return result ;
   }
 
 };

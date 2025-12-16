@@ -80,7 +80,13 @@ export const FoodRepository = {
     const query = `SELECT * FROM food WHERE restaurant_id = ?  order by id DESC`;
   const  [result] = await db().execute(query,[restaurantID]);
   return result;
-  }
+  },
+
+async getReservationByUserId(userID:number){
+  const query = `SELECT * FROM reservations WHERE ngo_id = ? ORDER BY ID`;
+  const  [result] = await db().execute(query,[userID]);
+  return result;  
+}
 
 
 

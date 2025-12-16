@@ -20,6 +20,7 @@ export default async function Routes(app: FastifyInstance) {
     protectedRoutes.patch("/reservation/:id/pick",{preHandler:[allowRoles(["ngo"])]},FoodController.pickReserveFood);
     protectedRoutes.get("/reservation/:id/status",{preHandler:[allowRoles(["ngo","restaurant"])]},FoodController.reservationStatus);
     protectedRoutes.get("/reservation/food/:foodId",{preHandler:[allowRoles(["restaurant"])]},FoodController.getReservationList);
-    protectedRoutes.get("/food/my",{preHandler:[allowRoles(["restaurant"])]},FoodController.getFoodByResturanId)
+    protectedRoutes.get("/food/my",{preHandler:[allowRoles(["restaurant"])]},FoodController.getFoodByResturanId);
+    protectedRoutes.get("/reservation/my",{preHandler:[allowRoles(["ngo"])]},FoodController.getReservationListByNGOId);
   });
 }
