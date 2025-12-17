@@ -20,3 +20,10 @@ export const registerUser = (data: RegisterPayload) => {
 export const loginUser = (data: LoginPayload) => {
   return api.post("/login", data);
 };
+export const getMyFoods = () => {
+  return api.get("/food/my");
+};
+export const getReservationRequests=(foodId:number)=>{
+  return api.get(`reservation/food/${foodId}`);
+}
+
