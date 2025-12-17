@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { loginUser } from "../api/auth";
 import { useNavigate } from "react-router-dom";
+import {jwtDecode} from "jwt-decode";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -10,6 +11,10 @@ const Login = () => {
     password: ""
   });
   const [message, setMessage] = useState<string>("");
+  interface JwtPayload {
+  id: number;
+  role: "restaurant" | "ngo";
+}
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({
@@ -25,14 +30,20 @@ const Login = () => {
       const res = await loginUser(formData);
 
       //  store token
-      localStorage.setItem("token", res.data.token);
-     setMessage(res.data.message);
-     console.log(res.data.message);
-
-
+    localStorage.setItem("token", res.data.token);
+    setMessage(res.data.message);
+    console.log(res.data.message);
+    const decoded = jwtDecode<JwtPayload>(res.data.token);
+    const role = decoded.role;
       //  redirect after login
-         setTimeout(() => {
-      navigate("/dashboard");
+     setTimeout(() => {
+     // role-based redirect
+    if (role === "restaurant") {
+      navigate("/restaurant");
+    } else {
+      navigate("/ngo");
+    }
+
     }, 1000);
 
     } catch (error) {
